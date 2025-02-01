@@ -1,0 +1,24 @@
+{
+    "title": "User",
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "name": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string",
+        "format": "email"
+      },
+      "age": {
+        "type": "integer",
+        "minimum": 18
+      },
+      "isActive": {
+        "type": "boolean"
+      }
+    },
+    "required": ["id", "name", "email"]
+  }

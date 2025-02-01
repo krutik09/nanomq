@@ -1802,6 +1802,14 @@ encode_pub_message(
  * @param proto check protocol verison, more need to be done in MQTTv5
  * @return reason_code
  */
+bool
+isSysTopic(const char *topicNameBody)
+{
+	if (strncmp(topicNameBody, "$SYS", 4) == 0) {
+		return true;
+	}
+	return false;
+}
 reason_code
 decode_pub_message(nano_work *work, uint8_t proto)
 {
@@ -1957,6 +1965,18 @@ decode_pub_message(nano_work *work, uint8_t proto)
 
 	default:
 		break;
+	}
+	if (!isSysTopic(pub_packet->var_header.publish.topic_name.body)) {
+		char *payload_data = (char *) pub_packet->payload.data;
+		void *data         = payload_data;
+		if (plugin_hook_call(1, data)==1) {
+			log_error(pub_packet->var_header.publish.topic_name.body);
+			log_error("The message: %s cannot be published on "
+			          "topic: %s due to wrong format",
+			    payload_data,
+			    pub_packet->var_header.publish.topic_name.body);
+			return PROTOCOL_ERROR;
+		}
 	}
 	return SUCCESS;
 }

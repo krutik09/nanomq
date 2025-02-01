@@ -20,6 +20,7 @@ struct nano_plugin {
 
 enum hook_point {
 	HOOK_USER_PROPERTY,
+	HOOK_VALIDATE_MESSAGE,
 };
 
 struct plugin_hook {
